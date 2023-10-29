@@ -1,3 +1,5 @@
+/build
+/states
 # Logs
 logs
 *.log
