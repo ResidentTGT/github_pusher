@@ -35,19 +35,28 @@ async function main() {
 
         const lorem = new LoremIpsum();
 
-        let repo = (await github.getRepos())[0];
-        if (!repo) {
-          repo = await github.createRepository(lorem.generateWords(1));
+        const repos = await github.getRepos();
+        let repo = repos[0];
+        if (!repo || repos.length < 5) {
+          repo = await github.createRepository(
+            lorem.generateWords(2).replace(" ", "")
+          );
           await delay(Random.intFromInterval(60, 180));
+        } else {
+          repo = Random.from(repos);
         }
 
-        const extensions = ["txt", "json", "js", "ts", "py"];
+        const extensions = ["json", "js", "ts", "py", "cairo"];
+        let name = "";
+        const depth = Random.intFromInterval(1, 3);
+        for (let i = 0; i < depth; i++) {
+          name += lorem.generateWords(1);
+          if (i != depth - 1) name += "/";
+        }
         await github.createCommit(
           repo.name,
           "main",
-          `${lorem.generateWords(1)}.${
-            extensions[Random.intFromInterval(1, extensions.length) - 1]
-          }`,
+          `${name}.${Random.from(extensions)}`,
           lorem.generateParagraphs(Random.intFromInterval(1, 10)),
           lorem.generateWords(Random.intFromInterval(1, 5))
         );
