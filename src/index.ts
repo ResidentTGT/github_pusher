@@ -7,6 +7,7 @@ import * as fs from "fs";
 const DAYS_FOR_PUSH = 30; // how many days pushing in repo
 const DELAY_BETWEEN_DAYS_IN_S = 60 * 60 * 24; // 1 day
 const DELAY_BETWEEN_ACCS_IN_S = 60; // 1 min
+const EXTENSIONS = ["json", "js", "ts", "py", "cairo"]; //extensions of files
 
 const TOKENS = fs.readFileSync("tokens.txt", "utf-8").split(/\r?\n/);
 const PROXIES = fs.readFileSync("proxies.txt", "utf-8").split(/\r?\n/);
@@ -46,7 +47,6 @@ async function main() {
           repo = Random.from(repos);
         }
 
-        const extensions = ["json", "js", "ts", "py", "cairo"];
         let name = "";
         const depth = Random.intFromInterval(1, 3);
         for (let i = 0; i < depth; i++) {
@@ -56,7 +56,7 @@ async function main() {
         await github.createCommit(
           repo.name,
           "main",
-          `${name}.${Random.from(extensions)}`,
+          `${name}.${Random.from(EXTENSIONS)}`,
           lorem.generateParagraphs(Random.intFromInterval(1, 10)),
           lorem.generateWords(Random.intFromInterval(1, 5))
         );
